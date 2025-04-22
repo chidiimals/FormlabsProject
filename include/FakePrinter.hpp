@@ -21,9 +21,9 @@ struct Summary{
 
 void to_json(json& j, const Summary& summary) {
     j = json{
-        {"total jobs",summary.total_jobs},
-        {"failed jobs", summary.failed_jobs},
-        {"printed jobs", static_cast<int>(summary.printed_jobs)}
+        {"expected layer height",summary.total_jobs},
+        {"failed layers", summary.failed_jobs},
+        {"total printed layers ", static_cast<int>(summary.printed_jobs)}
     };
 }class FakePrinter{
 public:
@@ -68,7 +68,11 @@ FakePrinter(
             
             if(layer.error != LayerError::kSuccess){
                 mode_->EncounteredError();
-                failed_jobs_++;
+                ++failed_jobs_;
+            }
+            else{
+                ++jobs_;
+
             }
             
             if(mode_->StopPrinting()){
@@ -77,7 +81,6 @@ FakePrinter(
             
             downloader_.start_download(layer.url_image,directory_path,layer.filename);
             writer.Write(layer);
-            jobs_++;
                 
 
         }

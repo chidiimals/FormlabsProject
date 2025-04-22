@@ -92,7 +92,7 @@ class AutomaticMode : public UserMode {
     public:
         void EncounteredError() override {
             std::cout << "Error Encountered: Stopping printing immediately" << std::endl;
-            UpdatePrintStatus(true);
+            UpdatePrintStatus(false);
         }
     
         void ContinuePrint() override {
