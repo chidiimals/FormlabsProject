@@ -6,7 +6,6 @@
 #ifndef LAYER_HPP_
 #define LAYER_HPP_
 
-
 enum class LayerError{kSuccess,kTimedOut,kTempOutRange};
 struct Layer{
 
@@ -52,6 +51,8 @@ struct Layer{
 
 
 };
+
+
 
 
 class CompositeLayers{

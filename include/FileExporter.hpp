@@ -54,12 +54,10 @@ class JsonPlugin : public PluginConverter {
             return output.dump(4); // Pretty print with 4 spaces
         }
 
-           
         std::unique_ptr<PluginConverter> Clone() const override {
             return std::make_unique<JsonPlugin>(*this); // Use copy constructor
         }
     };
-    
     
     class YamlPlugin : public PluginConverter{
         std::string Convert(const Layer& layer) const override{
@@ -84,7 +82,6 @@ class JsonPlugin : public PluginConverter {
             
                 return oss.str();   
         }
-
             
         std::unique_ptr<PluginConverter> Clone() const override {
             return std::make_unique<YamlPlugin>(*this); // Use copy constructor
@@ -92,7 +89,6 @@ class JsonPlugin : public PluginConverter {
 
     
     };
-
 class Exporter {
     public:
         
@@ -117,7 +113,6 @@ class Exporter {
             return plugin_->Convert(layer);
 
         }
-
     
     private:
         std::unique_ptr<PluginConverter> plugin_; //! unique pointer member

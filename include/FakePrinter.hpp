@@ -12,8 +12,20 @@
 #ifndef FAKE_PRINTER_HPP_
 #define FAKE_PRINTER_HPP_
 
+struct Summary{
+    int total_jobs;
+    int failed_jobs;
+    int printed_jobs;
 
-class FakePrinter{
+};
+
+void to_json(json& j, const Summary& summary) {
+    j = json{
+        {"total jobs",summary.total_jobs},
+        {"failed jobs", summary.failed_jobs},
+        {"printed jobs", static_cast<int>(summary.printed_jobs)}
+    };
+}class FakePrinter{
 public:
 
 FakePrinter(
@@ -29,7 +41,7 @@ FakePrinter(
       csv_file_name_(std::move(csv_file_name)),
       directory_name_(std::move(directory_name)),
       base_path_(std::filesystem::current_path()),
-      mode_(std::move(mode))
+      mode_(std::move(mode)),jobs_(0)
 {
     std::filesystem::create_directories(base_path_/directory_name_);
     base_path_str_ = base_path_.string();
@@ -56,6 +68,7 @@ FakePrinter(
             
             if(layer.error != LayerError::kSuccess){
                 mode_->EncounteredError();
+                failed_jobs_++;
             }
             
             if(mode_->StopPrinting()){
@@ -64,11 +77,14 @@ FakePrinter(
             
             downloader_.start_download(layer.url_image,directory_path,layer.filename);
             writer.Write(layer);
+            jobs_++;
                 
 
         }
 
-
+        Summary summary = {.total_jobs = static_cast<int>(reader_.GetCompositeLayer().GetNoLayers()),.printed_jobs = jobs_,.failed_jobs = failed_jobs_};
+        std::string summary_file{base_path_/ "summary.json"};
+        write_to_json(summary,summary_file);
 
 
     }
@@ -80,6 +96,20 @@ FakePrinter(
     const std::string GetName() const{
         return name_;
     }
+
+    void write_to_json(const Summary& summary,std::string summary_file) {
+        json j;
+        to_json(j, summary);
+        
+        std::ofstream file(summary_file);  
+        
+        if (file.is_open()) {
+            file << j.dump(4); 
+        } else {
+            std::cerr << "Could not open file for writing!" << std::endl;
+        }
+    }
+    
 private:
     const std::string name_; //! printer name
     const int id_; //! printer id
@@ -92,6 +122,9 @@ private:
     std::string directory_name_; //! name of directory
     std::string base_path_str_; //! base path
     std::filesystem::path base_path_; //! file system base path
+    int jobs_; //! no of jobs
+    int failed_jobs_; //! no of failed jobs
+
 
 static int next_id_; //! static variable for unique ids of printers 
 };

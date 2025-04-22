@@ -1,4 +1,5 @@
 
+# Welcome to the Formlabs Project Repository
 
 ### 1. Create a build directory
 `mkdir -p build`
@@ -11,3 +12,7 @@
 
 ### 4. Build the project
 `cmake --build .`
+
+
+### 5. To run from home directory
+`./build/FormlabsProject`

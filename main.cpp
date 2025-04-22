@@ -12,7 +12,7 @@ int main(){
         std::make_unique<JsonPlugin>(),
         std::string("fl_coding_challenge_v1.csv"),
         std::string("Printing"),
-        std::make_unique<SupervisedMode>()
+        std::make_unique<AutomaticMode>()
     );
 
     printer.PrintJob("Job1");
